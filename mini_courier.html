@@ -1,0 +1,72 @@
+<HTML>
+<HEAD>
+<link rel="stylesheet" type="text/css" href="common_style.css">
+<link rel="stylesheet" type="text/css" href="mc_style.css">
+</HEAD>
+<BODY>
+<div class="nav_bar">
+<ul>
+	<li><a href="index.html">Bank vs P2P</a></li>
+	<li><a href="nestle_blockchain.html">Blockchain in Nestle</a></li>
+	<li><a href="mini_courier.html" class="active">Mini Courier</a></li>
+	<li><a href="form.html">Feedback</a></li>
+</ul>
+</div>
+<div class="content">
+<H1>Mini Courier Introduction</H1>
+
+<div class="upgrades common">
+<H2>Upgrades</H2>
+
+<P>As mentioned before, the upgrade menu will be opened when the player earns every 20 points. There will be two upgrade/item choices for the player to choose. The probability is adjusted so that player will not find them too useful which may make the game too easy and affect the gameplay experience. There are four possible upgrades for the player to choose.</P>
+<P>We use a random number to determine the two upgrades that appear in the upgrade menu. Capacity upgrade has a 35% to appear in the first upgrade option and the speed booster has a 65% to appear in the first upgrade option. For the second option, if the current level is more than 5 (i.e. the player has earned more than or equal to 120 points), there's a 30% chance that the second upgrade is unlock the west cargo distribution center. If the first upgrade option is capacity upgrade, the second option would 100% be speed booster. Otherwise, there's a 40% chance for the second upgrade to be time extender. Otherwise, it will be a speed booster.</P>
+<P>The two buttons for choosing upgrade/item are handled by the script of upgrade menu script. Each button has its own handler so that it can call the function to execute the script and increase the item count or unlock upgrades. Since the option of the two buttons are pre-determined by the script, whenever the player presses the button, we can read the option set by the algorithm previously and execute the correct script.</P>
+<UL class="upgrades_inner">
+	<LI>Speed booster</LI>
+		<P>Speed booster is the most common item generated on the upgrade menu. When the player uses a speed booster by pressing the B key, the top speed of the vehicle will be temporarily raised by 150 for 5 seconds. It is especially useful if player is in a straight road, there are no AI on that road and they want to arrive to the destination quickly.</P>
+	<LI>Time extender</LI>
+		<P>Time extender is another item you can get when you earn every 20 points. When the player uses a speed booster by pressing the N key, the timer of all the cargoes to be delivered will be increased by 10 seconds.</P>
+	<LI>Capacity upgrade</LI>
+		<P>Capacity upgrade can be obtained with a lower probability than speed booster and time extender. When a player chooses that upgrade, the total available capacity of the player vehicle will be increased by 1. Players should choose this upgrade whenever it is possible since they need to carry more cargoes for each trip as they earn more points.</P>
+	<LI>Unlock west cargo distribution center</LI>
+		<P>This upgrade is a one-time upgrade. It will probably appear when a player has reached level 6 or above, i.e. earned more or equal to 120 points. Also, it will only appear in the second upgrade choice. When a player chose this upgrade, the west cargo distribution center (CDC) will be unlocked for player to use. Players can pick up cargoes there instead of needing to back to the east CDC and save time. It is recommended that player should choose this upgrade as soon as it is available.</P>
+</UL>
+</div>
+	
+<div class="npcs common">
+<H2>NPCs</H2>
+<P>The NPCs in the game is mainly responsible for creating obstacles to players so that they need to follow the traffic rule most of the time. They are also used to simulate a real-world city. When player crashes into an NPC straight on, he/she will lose 20 points. Each map in the game has different number of NPC depending on the difficulty of the map. If there are a lot of NPCs in the game, it is a lot harder for player to control the vehicle appropriately without crashing into them.</P>
+<UL class="npcs_inner">
+	<LI>Driving</LI>
+		<div class="npcs_inner_para">
+		<P>NPCs in the game have different top speed. They can only drive in 4 different directions, north, east, south and west at top speed. They will reduce speed if there are NPC in front of them that have a slower speed.</P>
+		</div>
+	<LI>Turning</LI>
+		<div class="npcs_inner_para">
+		<P>In the game, we use two different types of game object to change the direction of the NPC randomly.</P>
+		<P>When an NPC is approaching a corner, it will collide with a determine route game object (blue boxes in the picture) that determine the direction of the next turn. The script generates a random number from 1 to n, where n is the total number of possible turns of that corner. The AI will store that number in itself and continue driving.</P>
+		<P>Each corner is filled with turning points for each incoming direction. Each turning point is represented as an orange box below. When the AI collides with it, the AI will check whether it matches the direction it generated previously when it collided with the blue box and whether it matches the current direction. If yes, the AI will change its direction. If not, the AI will continue driving in its current direction.</P>
+		<P>For example, in this particular corner shown below. Assume that the AI drives to this corner from the south. At first, it will collide with the determine route game object (the blue box). Since there are only two routes possible in this corner, the AI will generate an integer between 1 and 2 and continue driving. When it collides with the orange box 2, it will first check whether its previously generated number match with the number labelled in that box (which is 1 in that box) and its target original direction (which is s, south). If yes, then it will turn to west. If not, it will keep on driving until it collides with the orange box 3. If the value in that box (2 in this case) matches with the value of the AI and its original direction, it will turn the AI to east.</P>
+		</div>
+	<LI>Colliders</LI>
+		<div class="npcs_inner_para">
+		<P>Similar to the player vehicle, each AI in the game has 3 colliders.</P>
+		<P>The first collider is polygon collider. It is used to prevent the AI from clipping through the wall and double yellow line of the map. It is not used in the AI script, but it is used to determine whether the player collides with the AI.</P>
+		<P>The second one is a box collider. It is used to determine whether the AI is colliding with another AI.</P>
+		<P>The third one is a circle collider. It is used to determine whether the AI with a higher top speed is approaching to another AI with a lower top speed.</P>
+		</div>
+	<LI>Respawner</LI>
+		<div class="npcs_inner_para">
+		<P>There are one respawner in each map of the game. Their main duty is to instantiate a new AI instance whenever needed given the nearby road is clear of traffic.</P>
+		<P>Whenever the player collides with an AI, or an AI collides with another AI, it will invoke the function <code>AI_Respawn.respawnAI()</code> so that the number of AI to be respawned will increase by 1.<P>
+		<P>The respawner script is attached to a tile in each map. It has two box colliders to scan whether an AI or the player is close to the spawn point. If yes, it will temporarily stop respawning AI until no game object collides with the colliders.</P>
+		<P>The spawn point is set in the script. If there are AI to be respawned. It will spawn an instance of the AI from the prefab every 2 seconds given that it is safe to respawn.</P>
+		</div>
+	</div>
+</div>
+
+</UL>
+</UL>	
+</div>
+</BODY>
+</HTML>

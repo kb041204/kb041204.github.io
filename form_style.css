@@ -1,0 +1,58 @@
+.question {
+	
+}
+
+.question label {
+	font-size: 1.25em;
+}
+
+.question input, .question select, .question textarea {
+	width: 20em;
+	margin-top: 4px;
+	margin-bottom: 30px;
+	font-size: 0.95em;
+	font-family: Arial, Helvetica, sans-serif;
+	border: 2px solid #ccc;
+	border-radius: 8px;
+	padding: 4px 8px;
+}
+
+.question textarea {
+	overflow: auto; /*Disable scrollbar*/
+	resize: none;
+}
+
+.question input, .question select {
+	height: 2.5em;
+}
+
+.question input:focus, .question select:focus, .question textarea:focus {
+	border: 3px solid #888;
+	background-color: #f5f5f5;
+}
+
+input[type=submit] {
+	float: right;
+	width: 10em;
+	padding: 8px;
+	background-color: #A0CCFF;
+	font-size: 1.15em;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin-bottom: inherit;
+}
+
+input[type=submit]:hover {
+	background-color: #A0A3E3;
+	cursor: pointer;
+}
+
+form {
+	background-color: lightyellow;
+	width: 21em;
+	overflow: auto;
+}
+
+div.questions_group {
+	margin: 16px;
+}
