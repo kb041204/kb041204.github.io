@@ -1,0 +1,95 @@
+body {
+	background-color: #092834;
+	color: #E4F1F6;
+}
+
+header {
+	display: flex;
+	justify-content: center;
+	align-items: baseline;
+}
+
+body > span {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 1rem;
+}
+
+header > span {
+	font-size: 3rem;
+	margin-left: 1rem;
+	margin-bottom: 1rem;
+}
+
+#list {
+	display: flex;
+	justify-content: center;
+}
+
+#list > a {
+	padding: 3rem;
+	width: 150px;
+	text-decoration: none;
+	background-color: #1A3E4C;
+	margin-right: 1rem;
+}
+
+#list > a:last-child {
+	margin-right: 0rem;
+}
+
+#list > a:hover {
+	background-color: #347B98;
+}
+
+.item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.item > span {
+	color: #E4F1F6;
+	font-size: 1.5rem;
+	margin-bottom: 0.5rem;
+}
+
+article {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+@media only screen and (max-width: 899px) {
+	
+	header > a > img {
+		height: 20px;
+	}
+	
+	header > span {
+		font-size: 2rem;
+		margin-left: 1rem;
+		margin-bottom: 1rem;
+	}
+	
+	#list {
+		flex-wrap: wrap;
+		justify-content: space-around;
+	}
+	
+	#list > a {
+		width: 50%;
+		padding: 2rem 1rem;
+	}
+	
+	#list > a:first-child {
+		margin-right: 0;
+		margin-bottom: 1rem;
+	}
+	
+	
+	
+	.item > span {
+		font-size: large;
+	}
+}

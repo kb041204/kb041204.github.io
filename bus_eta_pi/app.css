@@ -1,0 +1,48 @@
+html {
+    background-color: black;
+}
+
+span {
+    color: white;
+    font-family: Arial;
+}
+
+span.stop_name {
+    font-size: 5rem;
+}
+
+span.route_name {
+    font-size: 4rem;
+}
+
+div.ETA_item > span.ETA_text {
+    font-size: 2rem;
+}
+
+div.ETA_item_first > span.ETA_text {
+    font-size: 3rem;
+}
+
+span.ETA_text_suffix {
+    font-size: 1.5rem;
+}
+
+div#last_update span {
+	font-size: medium;
+}
+
+div.stop_ETA {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-around;
+}
+
+div#last_update_div {
+	margin-top: 1rem;
+}
+
+div#last_update_div > span {
+    font-size: 2rem;
+}
