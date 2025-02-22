@@ -1,15 +1,15 @@
 <?php
 if($account == "lord" && $password == "pass"){
- echo "Åwªï $_POST[account]";
- echo "\n¥H¤Wµn¤J´¡¥ó¨Ó¦Û¤¬Ápºô";
+ echo "æ­¡è¿Ž $_POST[account]";
+ echo "\nä»¥ä¸Šç™»å…¥æ’ä»¶ä¾†è‡ªäº’è¯ç¶²";
 }elseif($_POST[account] == "ktmc" && $_POST[password] == "ict"){
  $y = date("Y");
  $m = date("m");
  $d = date("d");
- echo "Åwªï, ¤µ¤Ñ¬O".$y."¦~".$m."¤ë".$d."¤é";
+ echo "æ­¡è¿Ž, ä»Šå¤©æ˜¯".$y."å¹´".$m."æœˆ".$d."æ—¥";
  echo '<BR><BR><img src="YY.jpg"/>';
 }else{
- echo "µn¤J¥¢±Ñ\n";
- echo "¥H¤Wµn¤J´¡¥ó¨Ó¦Û¤¬Ápºô";
+ echo "ç™»å…¥å¤±æ•—\n";
+ echo "ä»¥ä¸Šç™»å…¥æ’ä»¶ä¾†è‡ªäº’è¯ç¶²";
 }
 ?>
