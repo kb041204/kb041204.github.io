@@ -355,7 +355,7 @@ window.onload = function() {
 		refresh_ETA_KMB(target_div, "216M", station_IDs.KTSM[0], "1");
 		refresh_ETA_KMB(target_div, "214", station_IDs.KTSM[0], "1");
 		refresh_ETA_KMB(target_div, "14H", station_IDs.KTSM[0], "1");
-		refresh_ETA_GMB(target_div, "24M", station_IDs.KTSM[0], "1", "6");
+		refresh_ETA_GMB(target_div, "24M", station_IDs.KTSM[1], "1", "6");
 		refresh_last_update();
 	}
 	
