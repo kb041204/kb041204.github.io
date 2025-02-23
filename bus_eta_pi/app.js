@@ -265,6 +265,9 @@ window.onload = function() {
 							let ETA_text = document.createElement("span");
 							ETA_text.setAttribute("class", "ETA_text");
 							ETA_item.appendChild(ETA_text);
+							let ETA_text_suffix = document.createElement("span");
+							ETA_text_suffix.setAttribute("class", "ETA_text_suffix");
+							ETA_item.appendChild(ETA_text_suffix);
 								
 							let ms_diff = Date.parse(ETA_json.data.eta[i].timestamp) - Date.now()
 							//console.log(ms_diff)
@@ -290,6 +293,7 @@ window.onload = function() {
 							}
 							
 							ETA_text.innerHTML = text;
+							ETA_text_suffix.innerHTML = text_suffix;
 							
 							ETA_shown++;
 						}
