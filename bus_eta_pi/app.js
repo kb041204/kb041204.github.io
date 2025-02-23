@@ -108,6 +108,9 @@ window.onload = function() {
 									} else if (ETA_json.data[i].rmk_en == "Moving slowly") {
 										//text += " (慢)";
 										text_suffix = "(慢)";
+									} else if (ETA_json.data[i].rmk_en == "This route only operates on Mondays to Fridays (Except Public Holidays)") {
+										//text += " (慢)";
+										text_suffix = "(Mon-Fri only)";
 									} else {
 										//text += " (" + ETA_json.data[i].rmk_tc + ")";
 										text_suffix = "(" + ETA_json.data[i].rmk_tc + ")";
