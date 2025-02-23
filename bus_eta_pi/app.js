@@ -287,7 +287,7 @@ window.onload = function() {
 								//	text += "s";
 							}
 							
-							if(ETA_json.data.eta[i].remarks_en != "") {
+							if(ETA_json.data.eta[i].remarks_en != "" && ETA_json.data.eta[i].remarks_en != null) {
 								if(ETA_json.data.eta[i].remarks_en == "Scheduled") {
 									text_suffix = "(預)";
 								} else {
