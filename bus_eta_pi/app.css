@@ -15,6 +15,10 @@ span.route_name {
     font-size: 4rem;
 }
 
+span.route_name_GMB {
+    color: lightgreen;
+}
+
 div.ETA_item > span.ETA_text {
     font-size: 2rem;
 }
