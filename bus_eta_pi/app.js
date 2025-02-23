@@ -1,8 +1,10 @@
 var station_IDs = {
-	KT: ["57A0D4D6D4D57497", "8FAF102A11AB6C80", "84F4FB113301C3B6", "92AA28BBE48D6B2E", "215D99B3E2A5F8DD", "736E84A8060D2AB9", "001713"]
+	KTET: ["8FAF102A11AB6C80", "84F4FB113301C3B6", "92AA28BBE48D6B2E", "215D99B3E2A5F8DD", "2004396"],
+	KTSM: ["57A0D4D6D4D57497", "2008454"],
+	LPH: ["736E84A8060D2AB9", "001713"]
 };
 
-let refresh_interval_ms = 8000;
+let refresh_interval_ms = 7000;
 
 window.onload = function() {
 	//define header block and secton block
@@ -19,9 +21,9 @@ window.onload = function() {
 			target_parent_node.removeChild(target_parent_node.firstChild);
 	}
 
-	function refresh_ETA_KMB(div_name, route, stop_ID) {
+	function refresh_ETA_KMB(div_name, route, stop_ID, service_type) {
 		console.log(div_name.id + " " + route + " " + stop_ID)
-		let url = "https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/" + stop_ID
+		let url = "https://data.etabus.gov.hk/v1/transport/kmb/eta/" + stop_ID + "/" + route + "/" + service_type
 		fetch(url)
 		.then( response => {
 			if (response.status == 200) {
@@ -95,20 +97,20 @@ window.onload = function() {
 								if(ETA_json.data[i].rmk_en != "") {
 									if(ETA_json.data[i].rmk_en == "Scheduled Bus") {
 										//text += " (預)";
-										text_suffix = "(預)"
+										text_suffix = "(預)";
 									} else if (ETA_json.data[i].rmk_en == "Final Bus") {
 										//text += " (尾)";
-										text_suffix = "(尾)"
+										text_suffix = "(尾)";
 									} else if (ETA_json.data[i].rmk_en == "The final bus has departed from this stop"){
 										//text = "Final bus departed";
 										//text = "最後班次已開出";
-										text = "End"
+										text = "End";
 									} else if (ETA_json.data[i].rmk_en == "Moving slowly") {
 										//text += " (慢)";
-										text_suffix = "(慢)"
+										text_suffix = "(慢)";
 									} else {
 										//text += " (" + ETA_json.data[i].rmk_tc + ")";
-										text_suffix = " (" + ETA_json.data[i].rmk_tc + ")";
+										text_suffix = "(" + ETA_json.data[i].rmk_tc + ")";
 									}
 								}
 								
@@ -209,11 +211,98 @@ window.onload = function() {
 					//if there are no record
 					if(ETA_shown == 0 || ETA_json.data.length == 0) {
 						let ETA_item = document.createElement("div");
-						ETA_item.setAttribute("class", "ETA_item");
+						ETA_item.setAttribute("class", "ETA_item ETA_item_first");
 						ETA_block.appendChild(ETA_item);
 						
 						let ETA_text = document.createElement("span");
-						ETA_text.setAttribute("class", "ETA_text");
+						ETA_text.setAttribute("class", "ETA_text ETA_text_no_data");
+						ETA_text.innerHTML = "無資料";
+						ETA_item.appendChild(ETA_text);
+					}
+				});
+			}
+		});
+	}
+	
+	function refresh_ETA_GMB(div_name, route, route_id, route_seq, stop_seq) {
+		console.log(div_name.id + " " + route + " " + route_id + " " + route_seq + " " + stop_seq)
+		let url = "https://data.etagmb.gov.hk/eta/route-stop/" + route_id + "/" + route_seq + "/" + stop_seq
+		fetch(url)
+		.then( response => {
+			if (response.status == 200) {
+				response.json().then( ETA_json => {
+					//Populate div
+					//Create ETA block devs
+					
+					let ETA_block = document.createElement("div");
+					ETA_block.setAttribute("class", route + " route route_GMB");
+					div_name.appendChild(ETA_block);
+					
+					let ETA_block_text = document.createElement("span");
+					ETA_block_text.setAttribute("class", "route_name route_name_GMB");
+					ETA_block_text.innerHTML = route;
+					ETA_block.appendChild(ETA_block_text);
+					
+					//Create ETA item devs
+					let ETA_to_show = ETA_json.data.length;
+					if(ETA_json.data.length > 3)
+						ETA_to_show = 3;
+					
+					let ETA_shown = 0;
+					
+					//find out all the ETAs
+					if(ETA_json.data.eta.length != 0) {
+						for(let i = 0; i < (ETA_json.data.eta.length || ETA_shown == ETA_to_show); i++) {
+
+							let ETA_item = document.createElement("div");
+							if(ETA_shown == 0) {
+                                ETA_item.setAttribute("class", "ETA_item ETA_item_first");
+                            } else {
+                                ETA_item.setAttribute("class", "ETA_item");
+                            }
+							ETA_block.appendChild(ETA_item);
+									
+							let ETA_text = document.createElement("span");
+							ETA_text.setAttribute("class", "ETA_text");
+							ETA_item.appendChild(ETA_text);
+								
+							let ms_diff = Date.parse(ETA_json.data.eta[i].timestamp) - Date.now()
+							//console.log(ms_diff)
+							let min_diff = Math.round(ms_diff/1000/60)
+							
+							let text = "";
+							if(min_diff <= 0) {
+								text = "就到";
+							} else if (ETA_json.data.eta.length == 0) { 
+								text = "無資料";
+							} else {
+								text = min_diff + " 分鐘";
+								//if(min_diff != 1)
+								//	text += "s";
+							}
+							
+							if(ETA_json.data.eta[i].remarks_en != "") {
+								if(ETA_json.data.eta[i].remarks_en == "Scheduled") {
+									text_suffix = "(預)";
+								} else {
+									text_suffix = "(" + ETA_json.data.eta[i].remarks_tc + ")";
+								}
+							}
+							
+							ETA_text.innerHTML = text;
+							
+							ETA_shown++;
+						}
+					}
+
+					//if there are no record
+					if(ETA_shown == 0 || ETA_json.data.eta.length == 0) {
+						let ETA_item = document.createElement("div");
+						ETA_item.setAttribute("class", "ETA_item ETA_item_first");
+						ETA_block.appendChild(ETA_item);
+						
+						let ETA_text = document.createElement("span");
+						ETA_text.setAttribute("class", "ETA_text ETA_text_no_data");
 						ETA_text.innerHTML = "無資料";
 						ETA_item.appendChild(ETA_text);
 					}
@@ -241,28 +330,47 @@ window.onload = function() {
 	function refresh_KTET_div() {
         let target_div = document.getElementById("Kwong Tin Estate Terminus");
 		remove_all_child_nodes_from(target_div);
-		refresh_ETA_KMB(target_div, "216M", station_IDs.KT[1]);
-		refresh_ETA_KMB(target_div, "14B", station_IDs.KT[2]);
-		refresh_ETA_KMB(target_div, "16", station_IDs.KT[3]);
-		refresh_ETA_KMB(target_div, "215X", station_IDs.KT[4]);
+		refresh_ETA_KMB(target_div, "216M", station_IDs.KTET[0], "1");
+		refresh_ETA_KMB(target_div, "14B", station_IDs.KTET[1], "1");
+		refresh_ETA_KMB(target_div, "16", station_IDs.KTET[2], "1");
+		refresh_ETA_KMB(target_div, "215X", station_IDs.KTET[3], "1");
+		refresh_last_update();
+	}
+	
+	function refresh_KTET2_div() {
+        let target_div = document.getElementById("Kwong Tin Estate Terminus 2");
+		remove_all_child_nodes_from(target_div);
+		refresh_ETA_KMB(target_div, "15X", station_IDs.KTET[0], "1");
+		refresh_ETA_GMB(target_div, "63", station_IDs.KTET[4], "1", "1");
 		refresh_last_update();
 	}
 
 	function refresh_KTSM_div() {
 		let target_div = document.getElementById("Kwong Tin Shopping Mall");
 		remove_all_child_nodes_from(target_div);
-		refresh_ETA_KMB(target_div, "216M", station_IDs.KT[0]);
-		refresh_ETA_KMB(target_div, "214", station_IDs.KT[0]);
-		refresh_ETA_KMB(target_div, "14H", station_IDs.KT[0]);
+		refresh_ETA_KMB(target_div, "216M", station_IDs.KTSM[0], "1");
+		refresh_ETA_KMB(target_div, "214", station_IDs.KTSM[0], "1");
+		refresh_ETA_KMB(target_div, "14H", station_IDs.KTSM[0], "1");
+		refresh_ETA_GMB(target_div, "24M", station_IDs.KTSM[0], "1", "6");
+		refresh_last_update();
+	}
+	
+	function refresh_KTSM2_div() {
+		let target_div = document.getElementById("Kwong Tin Shopping Mall 2");
+		remove_all_child_nodes_from(target_div);
+		refresh_ETA_KMB(target_div, "88X", station_IDs.KTSM[0], "1");
+		refresh_ETA_KMB(target_div, "603", station_IDs.KTSM[0], "1");
+		refresh_ETA_KMB(target_div, "603A", station_IDs.KTSM[0], "1");
+		refresh_ETA_KMB(target_div, "613", station_IDs.KTSM[0], "1");
 		refresh_last_update();
 	}
 
 	function refresh_LPH_div() {
 	    let target_div = document.getElementById("Lung Pak House");
 		remove_all_child_nodes_from(target_div);
-		refresh_ETA_KMB(target_div, "216M", station_IDs.KT[5]);
-		refresh_ETA_CTB(target_div, "E22X", station_IDs.KT[6], 5);
-		refresh_ETA_CTB(target_div, "E22P", station_IDs.KT[6], 5);
+		refresh_ETA_KMB(target_div, "216M", station_IDs.LPH[0], "1");
+		refresh_ETA_CTB(target_div, "E22X", station_IDs.LPH[1], 5);
+		refresh_ETA_CTB(target_div, "E22P", station_IDs.LPH[1], 5);
 		refresh_last_update();
 	}
 
@@ -274,22 +382,27 @@ window.onload = function() {
         to_div.style.display = "inline";
 
         from_div_name = to_div_name;
-        var next_to_div;
-
-        if(to_div_name == "KTET_div") {
-             refresh_KTET_div();
+		
+        if(to_div_name == "KTET2_div") {
+             refresh_KTET2_div();
              to_div_name = "KTSM_div";
         } else if(to_div_name == "KTSM_div") {
              refresh_KTSM_div();
+             to_div_name = "KTSM2_div";
+        } else if(to_div_name == "KTSM2_div") {
+             refresh_KTSM2_div();
              to_div_name = "LPH_div";
         } else if(to_div_name == "LPH_div") {
              refresh_LPH_div();
              to_div_name = "KTET_div";
+        } else if(to_div_name == "KTET_div") {
+             refresh_KTET_div();
+             to_div_name = "KTET2_div";
         }
 
         setTimeout(function() {switch_display_div(from_div_name, to_div_name)}, refresh_interval_ms);
     }
 
 	refresh_KTET_div();
-	setTimeout(function() {switch_display_div("KTET_div", "KTSM_div")}, 5000);
+	setTimeout(function() {switch_display_div("KTET_div", "KTET2_div")}, 5000);
 }
